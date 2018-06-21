@@ -1,4 +1,8 @@
 # inotify cron system
+**With recursive check support**
+
+**`Debian/Ubuntu` family system version - customized installation with Debian
+`init.d` script support `service start/stop` daemon command**
 
 ## Authors
 * (c) **Lukas Jelinek**, 2006, 2007, 2008, 2009, 2012

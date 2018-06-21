@@ -52,7 +52,12 @@ install:	all install-man
 	$(INSTALL) -m 0755 incrond $(DESTDIR)$(PREFIX)/sbin/
 	$(INSTALL) -m 0755 -o $(USER) -d $(DESTDIR)$(USERDATADIR)
 	$(INSTALL) -m 0755 -o $(USER) -d $(DESTDIR)$(SYSDATADIR)
-	$(INSTALL) -m 0644 incron.conf.example $(DESTDIR)$(DOCDIR)/
+	$(INSTALL) -m 0755 init.d $(DESTDIR)$(CFGDIR)/init.d/incron
+	update-rc.d incron defaults > /dev/null
+	invoke-rc.d incron start
+	$(INSTALL) -m 0644 incron.conf.example $(DESTDIR)$(CFGDIR)/incron.conf
+	touch $(CFGDIR)/incron.allow
+	touch $(CFGDIR)/incron.deny
 
 install-man:	incrontab.1 incrontab.5 incrond.8 incron.conf.5
 	$(INSTALL) -m 0755 -d $(DESTDIR)$(MANPATH)/man1
@@ -64,9 +69,13 @@ install-man:	incrontab.1 incrontab.5 incrond.8 incron.conf.5
 	$(INSTALL) -m 0644 incron.conf.5 $(DESTDIR)$(MANPATH)/man5
 
 uninstall:	uninstall-man
+	invoke-rc.d incron stop
+	update-rc.d incron remove > /dev/null
 	rm -f $(DESTDIR)$(PREFIX)/bin/incrontab
 	rm -f $(DESTDIR)$(PREFIX)/sbin/incrond
 	rm -rf $(DESTDIR)$(DOCDIR)/
+	rm -f $(CFGDIR)/incron.allow
+	rm -f $(CFGDIR)/incron.deny
 
 uninstall-man:
 	rm -f $(DESTDIR)$(MANPATH)/man1/incrontab.1
